@@ -11,27 +11,7 @@ def init_board():
 def please_do_something():
     pass
 
-def get_move(board, player):
-    """Returns the coordinates of a valid move for player on board."""
-    row, col = 0, 0
-    rows = ['A', 'B', 'C']
-    cols = [1, 2, 3]
-    cols_str = list(map(str, cols))
-    user_input = None
-    while user_input is None:
-        user_input = input("Give coordinates: ")
-        if len(user_input) != 2:
-            user_input = None
-        elif user_input[0].upper() not in rows or user_input[1] not in cols_str:
-            user_input = None
-        else:
-            row = rows.index(user_input[0].upper())
-            col = cols.index(int(user_input[1]))
-        
-        if board[row][col] == '.':
-            return row, col
-        else:
-            user_input = None
+
     
 
 
