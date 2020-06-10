@@ -9,6 +9,7 @@ def init_board():
     return board
 
 def new_function():
+    print("Hello!")
     pass
 
 def get_move(board, player):
