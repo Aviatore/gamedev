@@ -9,6 +9,7 @@ def init_board():
     return board
 
 def please_do_something():
+    #doing things
     pass
 
 def get_move(board, player):
