@@ -8,9 +8,6 @@ def init_board():
     board = [['.','.','.'],['.','.','.'],['.','.','.']]
     return board
 
-def new_function():
-    print("Hello!")
-    pass
 
 def get_move(board, player):
     """Returns the coordinates of a valid move for player on board."""
@@ -47,7 +44,7 @@ def mark(board, player, row, col):
     board[row][col] = player['mark']
 
 
-def has_won(board, player):
+def has_won_mateusz(board, player):
     if board[0][0] == player['mark'] and board[0][1] == player['mark'] and board[0][2] == player['mark']:
         return True
     elif board[1][0] == player['mark'] and board[1][1] == player['mark'] and board[1][2] == player['mark']:
@@ -69,6 +66,39 @@ def has_won(board, player):
     else: 
         return False
 
+def has_won():
+    directions = [
+        [0, 1], # right
+        [1, 1], # down-right
+        [1, 0], # down
+        [-1, 0], # up
+        [1, -1], # down-left
+        [-1, -1], # up-left
+        [-1, 1],  # up-right
+        [0, -1]   # left
+    ]
+
+#    row_len = len(board[0])
+#    col_len = len(board)
+    row_len = 4
+    col_len = 4
+    direct = {}
+    for i in range(row_len):
+        if (row_len - i) > 3 - 1: # 3 - liczba znaków aby wygrać
+            try:
+                direct[i].append(1)
+            except KeyError:
+                direct[i] = [1]
+        elif (i + 1) >= 3:
+            try:
+                direct[i].append(-1)
+            except KeyError:
+                direct[i] = [-1]
+    print(direct)       
+    for row in range(row_len):
+        for col in range(col_len):
+            
+    
 def has_won_(board, player):
     """Returns True if player has won the game."""
     row_len = len(board[0])
