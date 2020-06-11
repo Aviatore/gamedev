@@ -1,9 +1,40 @@
-# test comment
-
 def init_board():
-    """Returns an empty 3-by-3 board (with .).""" 
+    """Returns an empty board. Size can be provided by the player"""
+    row_number = None
+    while row_number == None: 
+        row_number = input("Provide number of rows: ")
+        if len(row_number) != 1:
+            print("Only one digit allowed")
+            row_number = None
+            continue
+        if row_number.isnumeric():
+            row_number = int(row_number)
+        else:
+            print("Only numeric values allowed")
+            row_number = None
+            continue
+
+    col_number = None
+    while col_number == None: 
+        col_number = input("Provide number of columns: ")
+        if len(col_number) != 1:
+            print("Only one digit allowed")
+            col_number = None
+            continue
+        if col_number.isnumeric():
+            col_number = int(col_number)
+        else:
+            print("Only numeric values allowed")
+            col_number = None
+            continue
+
     
-    board = [[".",".",".",".","."],[".",".",".",".","."],[".",".",".",".","."],[".",".",".",".","."], [".",".",".",".","."]]
+    board = []
+    for i in range(row_number):
+        columns = []
+        board.append(columns)
+        for j in range(col_number):
+            columns.append(".")
 
     return board
 
@@ -12,18 +43,20 @@ def init_board():
 def get_move(board, player):
     """Returns the coordinates of a valid move for player on board."""
     row, col = 0, 0
-    rows = ['A', 'B', 'C', 'D', 'E']
-    cols_str = ['1', '2', '3', '4', '5']
+    rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    cols_str = ['1', '2', '3', '4', '5', '6,', '7', '8', '9']
 
     player_input = None
     while player_input == None:
         player_input = input("Provide coordinates: ").upper()
-        if player_input[0] not in rows or player_input[1] not in cols_str:
+        if len(player_input) != 2:
+            print("Only two characters allowed")
             player_input = None
-            continue
-        elif len(player_input) != 2:
+            continue 
+        elif player_input[0] not in rows or player_input[1] not in cols_str:
+            print("Expected a letter and a digit")
             player_input = None
-            continue  
+            continue 
         else:
             row = rows.index(player_input[0])
             col = cols_str.index(player_input[1])
@@ -55,11 +88,11 @@ def has_won(board, player):
     col_len = len(board)
 
     cross_template = [['00', '11', '22'],['02','11', '20']]
-    in_col = [0, 0, 0, 0, 0]
+    in_col = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     cross = [0, 0]
-    for row in range(row_len):
+    for row in range(col_len):
         in_row = 0
-        for col in range(col_len):
+        for col in range(row_len):
             if board[row][col] == player:
                 in_row += 1
                 in_col[col] += 1
@@ -96,11 +129,11 @@ def print_board(board):
     row_len = len(board[0])
     col_len = len(board)
 
-    letter = ['A', 'B', 'C', 'D', 'E']
-    number = ['1', '2', '3', '4', '5']
+    letter = ['A', 'B', 'C', 'D', 'E','F','G','H', 'I']
+    number = ['1', '2', '3', '4', '5','6','7','8', '9']
     current_row = 0
     lines = []
-    for line in range(col_len):
+    for line in range(row_len):
         lines.append("---")
         
 
