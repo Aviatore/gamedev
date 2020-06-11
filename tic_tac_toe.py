@@ -1,4 +1,10 @@
-# test comment
+from colorama import Style
+from colorama import Fore
+
+red = Fore.LIGHTRED_EX
+blue = Fore.LIGHTBLUE_EX
+style = Style.RESET_ALL
+
 
 def init_board():
     """Returns an empty 3-by-3 board (with .).""" 
@@ -132,20 +138,20 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
     print_board(board)
     # use get_move(), mark(), has_won(), is_full(), and print_board() to create game logic
     #print_board(board)
-    while not is_full(board) and not has_won(board, "O") and not has_won(board, "X"):
-        row, col = get_move(board, "X")
-        mark(board, "X", row, col)
+    while not is_full(board) and not has_won(board, f"{red}O{style}") and not has_won(board, f"{blue}X{style}"):
+        row, col = get_move(board, f"{blue}X{style}")
+        mark(board, f"{blue}X{style}", row, col)
         print_board(board)
-        if not is_full(board) and not has_won(board, "O") and not has_won(board, "X"):
-            row, col = get_move(board, "O")
-            mark(board, "O", row, col)
+        if not is_full(board) and not has_won(board, f"{red}O{style}") and not has_won(board, f"{blue}X{style}"):
+            row, col = get_move(board, f"{red}O{style}")
+            mark(board, f"{red}O{style}", row, col)
             print_board(board)
     if is_full(board):
         winner = "tie"
-    if has_won(board, "X"):
-        winner = "X"
+    if has_won(board, f"{blue}X{style}"):
+        winner = f"{blue}X{style}"
     else:
-        winner = "O"
+        winner = f"{red}O{style}"
     print_result(winner)
 
 
