@@ -66,22 +66,44 @@ def has_won_mateusz(board, player):
     else: 
         return False
 
-def has_won():
-    directions = [
-        [0, 1], # right
-        [1, 1], # down-right
-        [1, 0], # down
-        [-1, 0], # up
-        [1, -1], # down-left
-        [-1, -1], # up-left
-        [-1, 1],  # up-right
-        [0, -1]   # left
-    ]
+def has_won(board, player):
+    row_len = len(board[0])
+    col_len = len(board)
 
-#    row_len = len(board[0])
-#    col_len = len(board)
-    row_len = 4
-    col_len = 4
+    row = []
+    for row_index in range(row_len):
+        for col_index in range(col_len):
+            if board[row_index][col_index] == player['mark']:
+                try:
+                    if row[-1][0] == row_index and row[-1][1] == col_index - 1:
+                        row.append([row_index, col_index])
+                    else:
+                        row.clear()
+                except IndexError:
+                    row.append([row_index, col_index])
+        if len(row) == 3:
+            for cord in row:
+                board[cord[0]][cord[1]] = f"\033[32m{player['mark']}\033[0m"
+            return True
+        row.clear()
+    col = []
+    for col_index in range(col_len):
+        for row_index in range(row_len):
+            if board[row_index][col_index] == player['mark']:
+                try:
+                    if col[-1][0] == col_index and col[-1][1] == row_index - 1:
+                        col.append([row_index, col_index])
+                    else:
+                        col.clear()
+                except IndexError:
+                    col.append([row_index, col_index])
+        if len(col) == 3:
+            for cord in col:
+                board[cord[0]][cord[1]] = f"\033[32m{player['mark']}\033[0m"
+            return True
+        else:
+            col.clear()
+
     direct = {}
     for i in range(row_len):
         if (row_len - i) > 3 - 1: # 3 - liczba znaków aby wygrać
@@ -89,15 +111,61 @@ def has_won():
                 direct[i].append(1)
             except KeyError:
                 direct[i] = [1]
-        elif (i + 1) >= 3:
+        if (i + 1) >= 3:
             try:
                 direct[i].append(-1)
             except KeyError:
                 direct[i] = [-1]
-    print(direct)       
-    for row in range(row_len):
-        for col in range(col_len):
-            
+
+    cross = []
+    for col_index in range(col_len):
+        try:
+            for col_d in direct[col_index]:
+                d = [1, col_d]
+                coord = [0, col_index]
+                while True:
+                    try:
+                        if board[coord[0]][coord[1]] == player['mark']:
+                            cross.append([coord[0], coord[1]])
+                        else:
+                            cross.clear()
+                    except IndexError:
+                        break
+                    coord[0] += d[0]
+                    coord[1] += d[1]
+                if len(cross) == 3:
+                    for cord in cross:
+                        board[cord[0]][cord[1]] = f"\033[32m{player['mark']}\033[0m"
+                    return True
+                else:
+                    cross.clear()
+        except KeyError:
+            pass
+
+    cross = []
+    for col_index in range(1, col_len):
+        try:
+            for col_d in direct[col_index]:
+                d = [1, col_d]
+                coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
+                while True:
+                    try:
+                        if board[coord[0]][coord[1]] == player['mark']:
+                            cross.append([coord[0], coord[1]])
+                        else:
+                            cross.clear()
+                    except IndexError:
+                        break
+                    coord[0] += d[0]
+                    coord[1] += d[1]
+                if len(cross) == 3:
+                    for cord in cross:
+                        board[cord[0]][cord[1]] = f"\033[32m{player['mark']}\033[0m"
+                    return True
+                else:
+                    cross.clear()
+        except KeyError:
+            pass
     
 def has_won_(board, player):
     """Returns True if player has won the game."""
@@ -227,6 +295,7 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
         mark(board, player2, row, col)
         if has_won(board, player2):
             winner = 'O'
+            clear()
             print_board(board)
             print_result(winner)
             loop = False
