@@ -4,18 +4,27 @@ import random
 def clear():
     sub.run(["clear"])
 
-def init_board():
+def init_board(size):
     """Returns an empty 3-by-3 board (with .)."""
-    board = [['.','.','.'],['.','.','.'],['.','.','.']]
+    board = []
+    for row in range(size):
+        board.append(('. '*size).split(" ")[:-1])
     return board
 
 
 def get_move(board, player):
     """Returns the coordinates of a valid move for player on board."""
-    row, col = 0, 0
-    rows = ['A', 'B', 'C']
-    cols = [1, 2, 3]
+    row_len = len(board[0])
+    col_len = len(board)
+    rows_template = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    cols = []
+    for col_index in range(col_len):
+        cols.append(col_index + 1)
     cols_str = list(map(str, cols))
+    rows = []
+    for row_index in range(row_len):
+        rows.append(rows_template[row_index])
+
     user_input = None
     while user_input is None:
         user_input = input("Give coordinates: ")
@@ -60,18 +69,18 @@ def get_ai_move(board, player):
                         row_data['cords'].append([row_index, col_index])
                 elif board[row_index][col_index] == '.' and [row_index, col_index - 1] not in row_data['free_cords']:
                     row_data['free_cords'].append([row_index, col_index])
-                else:
-                    row_data['cords'].clear()
-                    row_data['free_cords'].clear()
+                #else:
+                #    row_data['cords'].clear()
+                #    row_data['free_cords'].clear()
 
-            if len(row_data['cords']) == 2:
-                if len(row_data['free_cords']) > 0:
-                    row = row_data['free_cords'][0][0]
-                    col = row_data['free_cords'][0][1]
-                    return row, col
-            else:
-                row_data['cords'].clear()
-                row_data['free_cords'].clear()
+                if len(row_data['cords']) == 2:
+                    if len(row_data['free_cords']) > 0:
+                        row = row_data['free_cords'][0][0]
+                        col = row_data['free_cords'][0][1]
+                        return row, col
+            #else:
+            row_data['cords'].clear()
+            row_data['free_cords'].clear()
 
         
         col_data = {
@@ -92,18 +101,18 @@ def get_ai_move(board, player):
                         col_data['cords'].append([row_index, col_index])
                 elif board[row_index][col_index] == '.' and [row_index - 1, col_index] not in col_data['free_cords']:
                     col_data['free_cords'].append([row_index, col_index])
-                else:
-                    col_data['cords'].clear()
-                    col_data['free_cords'].clear()
+                #else:
+                #    col_data['cords'].clear()
+                #    col_data['free_cords'].clear()
 
-            if len(col_data['cords']) == 2:
-                if len(col_data['free_cords']) > 0:
-                    row = col_data['free_cords'][0][0]
-                    col = col_data['free_cords'][0][1]
-                    return row, col
-            else:
-                col_data['cords'].clear()
-                col_data['free_cords'].clear()
+                if len(col_data['cords']) == 2:
+                    if len(col_data['free_cords']) > 0:
+                        row = col_data['free_cords'][0][0]
+                        col = col_data['free_cords'][0][1]
+                        return row, col
+            #else:
+            col_data['cords'].clear()
+            col_data['free_cords'].clear()
 
         direct = {}
         for i in range(row_len):
@@ -141,21 +150,22 @@ def get_ai_move(board, player):
                                     cross_data['cords'].append([coord[0], coord[1]])
                             elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
                                 cross_data['free_cords'].append([coord[0], coord[1]])
-                            else:
-                                cross_data['cords'].clear()
-                                cross_data['free_cords'].clear()
+                            #else:
+                            #    cross_data['cords'].clear()
+                            #    cross_data['free_cords'].clear()
                         except IndexError:
                             break
                         coord[0] += d[0]
                         coord[1] += d[1]
-                    if len(cross_data['cords']) == 2:
-                        if len(cross_data['free_cords']) > 0:
-                            row = cross_data['free_cords'][0][0]
-                            col = cross_data['free_cords'][0][1]
-                            return row, col
-                    else:
-                        cross_data['cords'].clear()
-                        cross_data['free_cords'].clear()
+                        #print(cross_data)
+                        if len(cross_data['cords']) == 2:
+                            if len(cross_data['free_cords']) > 0:
+                                row = cross_data['free_cords'][0][0]
+                                col = cross_data['free_cords'][0][1]
+                                return row, col
+                    #else:
+                    cross_data['cords'].clear()
+                    cross_data['free_cords'].clear()
             except KeyError:
                 pass
 
@@ -182,21 +192,21 @@ def get_ai_move(board, player):
                                     cross_data['cords'].append([coord[0], coord[1]])
                             elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
                                 cross_data['free_cords'].append([coord[0], coord[1]])
-                            else:
-                                cross_data['cords'].clear()
-                                cross_data['free_cords'].clear()
+                            #else:
+                            #    cross_data['cords'].clear()
+                            #    cross_data['free_cords'].clear()
                         except IndexError:
                             break
                         coord[0] += d[0]
                         coord[1] += d[1]
-                    if len(cross_data['cords']) == 2:
-                        if len(cross_data['free_cords']) > 0:
-                            row = cross_data['free_cords'][0][0]
-                            col = cross_data['free_cords'][0][1]
-                            return row, col
-                    else:
-                        cross_data['cords'].clear()
-                        cross_data['free_cords'].clear()
+                        if len(cross_data['cords']) == 2:
+                            if len(cross_data['free_cords']) > 0:
+                                row = cross_data['free_cords'][0][0]
+                                col = cross_data['free_cords'][0][1]
+                                return row, col
+                    #else:
+                    cross_data['cords'].clear()
+                    cross_data['free_cords'].clear()
             except KeyError:
                 pass
 
@@ -398,7 +408,7 @@ def is_full(board):
         return False
 
 
-def print_board(board):
+def print_board_(board):
     letter = ["A", "B", "C"]
     current_row = 0
 
@@ -412,13 +422,18 @@ def print_board(board):
         if current_row <= 2:
             print("  ---+---+---") 
 
-def print_board_(board):
+def print_board(board):
     """Prints a 3-by-3 board on the screen with borders."""
     row_len = len(board[0])
     col_len = len(board)
-    rows = ['A', 'B', 'C']
-    cols = [1, 2, 3]
+    rows_template = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    cols = []
+    for col_index in range(col_len):
+        cols.append(col_index + 1)
     cols_str = list(map(str, cols))
+    rows = []
+    for row_index in range(row_len):
+        rows.append(rows_template[row_index])
     line = []
     for i in range(row_len):
         line.append("---")
@@ -439,6 +454,14 @@ def print_result(winner):
 
 
 def tictactoe_game(mode='HUMAN-HUMAN'):
+    size = None
+    while size is None:
+        size = input("Board size: ")
+        if not size.isdigit():
+            size = None
+        elif not 2 < int(size) < 10:
+            size = None
+    board = init_board(int(size))
     if mode == 'HUMAN-HUMAN':
         player_name1 = None
         while player_name1 is None:
@@ -452,7 +475,6 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
             if len(player_name2) < 3:
                 print("Your name should be at least three characters long.")
                 player_name2 = None
-        board = init_board()
         player1 = {}
         player1['name'] = player_name1
         player1['mark'] = 'X'
@@ -505,7 +527,6 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
             if len(player_name1) < 3:
                 print("Your name should be at least three characters long.")
                 player_name1 = None
-        board = init_board()
         player1 = {}
         player1['name'] = player_name1
         player1['mark'] = 'X'
