@@ -33,7 +33,10 @@ def get_move(board, player):
     user_input = None
     while user_input is None:
         user_input = input(f"{player['name']}, please give coordinates: ")
-        if len(user_input) != 2:
+        if user_input == 'quit':
+            print("Good bye!")
+            exit()
+        elif len(user_input) != 2:
             user_input = None
             continue
         elif user_input[0].upper() not in rows or user_input[1] not in cols_str:

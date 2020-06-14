@@ -24,7 +24,10 @@ def main_menu(clear):
         print(msg)
         msg = ""
         user_input = input("> ")
-        if not user_input.isdigit():
+        if user_input == 'quit':
+            print("Good bye!")
+            exit()
+        elif not user_input.isdigit():
             msg = "Please, input a digit: 1, 2, or 3"
             user_input = None
             continue
@@ -54,7 +57,10 @@ def get_board_size(clear):
         print(msg)
         msg = ""
         board_size = input("> ")
-        if not board_size.isdigit():
+        if board_size == 'quit':
+            print("Good bye!")
+            exit()
+        elif not board_size.isdigit():
             msg = "Please, input a digit within a range from 3 to 9"
             board_size = None
         elif int(board_size) not in range(3, 10):
@@ -83,7 +89,10 @@ def get_game_mode(clear):
         print(msg)
         msg = ""
         get_game_mode = input("> ")
-        if not get_game_mode.isdigit():
+        if get_game_mode == 'quit':
+            print("Good bye!")
+            exit()
+        elif not get_game_mode.isdigit():
             msg = "Please, input a digit: 1, 2, 3 or 4"
             get_game_mode = None
         elif int(get_game_mode) not in range(1, 5):
@@ -120,7 +129,10 @@ def game_properties(board_size, game_mode, clear):
             print(msg)
             msg = ""
             user_input = input("> ")
-            if not user_input.isdigit():
+            if user_input == 'quit':
+                print("Good bye!")
+                exit()
+            elif not user_input.isdigit():
                 msg = "Please, input a digit: 1, 2, 3 or 4"
                 user_input = None
                 continue
@@ -173,7 +185,10 @@ def game_properties(board_size, game_mode, clear):
             print(msg)
             msg = ""
             user_input = input("> ")
-            if not user_input.isdigit():
+            if user_input == 'quit':
+                print("Good bye!")
+                exit()
+            elif not user_input.isdigit():
                 msg = "Please, input a digit: 1, 2, 3 or 4"
                 user_input = None
                 continue
@@ -224,7 +239,10 @@ def game_properties(board_size, game_mode, clear):
             print(msg)
             msg = ""
             user_input = input("> ")
-            if not user_input.isdigit():
+            if user_input == 'quit':
+                print("Good bye!")
+                exit()
+            elif not user_input.isdigit():
                 msg = "Please, input a digit: 1, 2, 3 or 4"
                 user_input = None
                 continue
@@ -258,7 +276,10 @@ def get_player_prop(player_type, player, clear):
             print(msg)
             msg = ""
             user_input = input("> ")
-            if not user_input.isdigit():
+            if user_input == 'quit':
+                print("Good bye!")
+                exit()
+            elif not user_input.isdigit():
                 msg = "Please, input a digit: 1, 2 or 3"
                 user_input = None
             elif int(user_input) not in range(1, 4):
@@ -282,7 +303,10 @@ def get_player_prop(player_type, player, clear):
             print(msg)
             msg = ""
             user_input = input("> ")
-            if not user_input.isdigit():
+            if user_input == 'quit':
+                print("Good bye!")
+                exit()
+            elif not user_input.isdigit():
                 msg = "Please, input a digit: 1, 2 or 3"
                 user_input = None
             elif int(user_input) not in range(1, 4):
@@ -316,7 +340,10 @@ def get_player_level(clear):
         print(msg)
         msg = ""
         level = input("> ")
-        if not level.isdigit():
+        if level == 'quit':
+            print("Good bye!")
+            exit()
+        elif not level.isdigit():
             msg = "Please, input a digit: 1, 2 or 3"
             level = None
         elif int(level) not in range(1, 4):
@@ -333,7 +360,10 @@ def get_player_name(clear):
         print(msg)
         msg = ""
         user_input = input("Player's name: ")
-        if len(user_input) < 3:
+        if user_input == 'quit':
+            print("Good bye!")
+            exit()
+        elif len(user_input) < 3:
             msg = "Player's name should be at least 3-characters long"
             user_input = None
     return user_input
@@ -357,7 +387,10 @@ def get_player_color(clear):
         print(msg)
         msg = ""
         user_input = input("Player's mark color: ")
-        if not user_input.isdigit():
+        if user_input == 'quit':
+            print("Good bye!")
+            exit()
+        elif not user_input.isdigit():
             msg = "Please, input a digit: 1, 2, 3 or 4"
             user_input = None
             continue
