@@ -98,12 +98,14 @@ def game_properties(board_size, game_mode, clear):
         player1 = {
             'name': 'Player1',
             'mark': 'X',
-            'color': WHITE
+            'color': WHITE,
+            'points': 0
         }
         player2 = {
             'name': 'Player2',
             'mark': 'O',
-            'color': WHITE
+            'color': WHITE,
+            'points': 0
         }
         user_input = None
         msg = ""
@@ -141,13 +143,15 @@ def game_properties(board_size, game_mode, clear):
         player = {
             'name': 'Player',
             'mark': None,
-            'color': WHITE
+            'color': WHITE,
+            'points': 0
         }
         computer = {
             'name': 'Computer',
             'mark': None,
             'color': WHITE,
-            'level': 'Medium'
+            'level': 'Medium',
+            'points': 0
         }
         if game_mode == 'HUMAN-AI':
             player['mark'] = 'X'
@@ -197,13 +201,15 @@ def game_properties(board_size, game_mode, clear):
             'name': 'Computer1',
             'mark': 'X',
             'color': WHITE,
-            'level': 'Medium'
+            'level': 'Medium',
+            'points': 0
         }
         computer2 = {
             'name': 'Computer2',
             'mark': 'O',
             'color': WHITE,
-            'level': 'Medium'
+            'level': 'Medium',
+            'points': 0
         }
         user_input = None
         msg = ""

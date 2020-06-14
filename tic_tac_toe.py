@@ -35,8 +35,10 @@ def get_move(board, player):
         user_input = input(f"{player['name']}, please give coordinates: ")
         if len(user_input) != 2:
             user_input = None
+            continue
         elif user_input[0].upper() not in rows or user_input[1] not in cols_str:
             user_input = None
+            continue
         else:
             row = rows.index(user_input[0].upper())
             col = cols.index(int(user_input[1]))
@@ -293,6 +295,7 @@ def has_won(board, player):
         if len(row) == 3:
             for cord in row:
                 board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+            player['points'] += 1
             return True
         row.clear()
     col = []
@@ -309,6 +312,7 @@ def has_won(board, player):
         if len(col) == 3:
             for cord in col:
                 board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+            player['points'] += 1
             return True
         else:
             col.clear()
@@ -345,6 +349,7 @@ def has_won(board, player):
                 if len(cross) == 3:
                     for cord in cross:
                         board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+                    player['points'] += 1
                     return True
                 else:
                     cross.clear()
@@ -370,6 +375,7 @@ def has_won(board, player):
                 if len(cross) == 3:
                     for cord in cross:
                         board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+                    player['points'] += 1
                     return True
                 else:
                     cross.clear()
@@ -431,7 +437,7 @@ def print_board_(board):
         if current_row <= 2:
             print("  ---+---+---") 
 
-def print_board(board):
+def print_board(board, player1, player2):
     """Prints a 3-by-3 board on the screen with borders."""
     row_len = len(board[0])
     col_len = len(board)
@@ -447,6 +453,9 @@ def print_board(board):
     for i in range(row_len):
         line.append("---")
     
+    print(f"{player1['name']} : {player2['name']}")
+    print(f"{str(player1['points']).rjust(len(player1['name']))} : {player2['points']}")
+    print("")
     print("  ", "   ".join(cols_str))
     for index in range(col_len):
         print(f"{rows[index]}  {' | '.join(board[index])}")
@@ -469,41 +478,45 @@ def tictactoe_game(board_size, mode, player1, player2):
         loop = True
         while loop:
             clear()
-            print_board(board)
+            print_board(board, player1, player2)
             row, col = get_move(board, player1)
             mark(board, player1, row, col)
             if has_won(board, player1):
                 winner = player1['mark']
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             elif is_full(board):
                 winner = 'tie'
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             clear()
-            print_board(board)
+            print_board(board, player1, player2)
             row, col = get_move(board, player2)
             mark(board, player2, row, col)
             if has_won(board, player2):
                 winner = player2['mark']
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             elif is_full(board):
                 winner = 'tie'
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
     elif mode == 'HUMAN-AI' or mode == 'AI-HUMAN':
         # use get_move(), mark(), has_won(), is_full(), and print_board() to create game logic
         loop = True
@@ -516,25 +529,27 @@ def tictactoe_game(board_size, mode, player1, player2):
 
         while loop:
             clear()
-            print_board(board)
+            print_board(board, player1, player2)
             row, col = get_move_first(board, player1)
             mark(board, player1, row, col)
             if has_won(board, player1):
                 winner = player1['mark']
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             elif is_full(board):
                 winner = 'tie'
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             clear()
-            print_board(board)
+            print_board(board, player1, player2)
             output = get_move_second(board, player2)
             print(output)
             row, col = output
@@ -542,58 +557,80 @@ def tictactoe_game(board_size, mode, player1, player2):
             if has_won(board, player2):
                 winner = player2['mark']
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             elif is_full(board):
                 winner = 'tie'
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
     elif mode == 'AI-AI':
         loop = True
         while loop:
             clear()
-            print_board(board)
+            print_board(board, player1, player2)
             row, col = get_ai_move(board, player1)
             mark(board, player1, row, col)
             if has_won(board, player1):
                 winner = player1['mark']
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             elif is_full(board):
                 winner = 'tie'
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             time.sleep(1)
             clear()
-            print_board(board)
+            print_board(board, player1, player2)
             row, col = get_ai_move(board, player2)
             mark(board, player2, row, col)
             time.sleep(1)
             if has_won(board, player2):
                 winner = player2['mark']
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
             elif is_full(board):
                 winner = 'tie'
                 clear()
-                print_board(board)
+                print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                continue
+                next_game_question(board_size, mode, player1, player2)
+                #continue
+
+
+
+def next_game_question(board_size, mode, player1, player2):
+    user_input = None
+    if user_input is None:
+        user_input = input("Next game? [y]yes, [n]no: ")
+        if user_input not in ['y', 'n', 'quit']:
+            user_input = None
+        elif user_input == 'y':
+            tictactoe_game(board_size, mode, player1, player2)
+        elif user_input == 'n':
+            main_menu()
+        elif user_input == 'quit':
+            print("Good bye!")
+            exit()
 
 def main_menu():
 #    tictactoe_game('HUMAN-HUMAN')
