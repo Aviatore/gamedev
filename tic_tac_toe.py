@@ -17,7 +17,7 @@ def init_board(size):
     return board
 
 
-def get_move(board, player):
+def get_move(board, player, board_props=None):
     """Returns the coordinates of a valid move for player on board."""
     row_len = len(board[0])
     col_len = len(board)
@@ -53,7 +53,7 @@ def get_move(board, player):
     
 
 
-def get_ai_move(board, player):
+def get_ai_move(board, player, board_props):
     """Returns the coordinates of a valid move for player on board."""
     row, col = 0, 0
 
@@ -87,7 +87,7 @@ def get_ai_move(board, player):
                     #    row_data['cords'].clear()
                     #    row_data['free_cords'].clear()
 
-                    if len(row_data['cords']) == 2:
+                    if len(row_data['cords']) == board_props['num'] - 1:
                         if len(row_data['free_cords']) > 0:
                             row = row_data['free_cords'][0][0]
                             col = row_data['free_cords'][0][1]
@@ -119,7 +119,7 @@ def get_ai_move(board, player):
                     #    col_data['cords'].clear()
                     #    col_data['free_cords'].clear()
 
-                    if len(col_data['cords']) == 2:
+                    if len(col_data['cords']) == board_props['num'] - 1:
                         if len(col_data['free_cords']) > 0:
                             row = col_data['free_cords'][0][0]
                             col = col_data['free_cords'][0][1]
@@ -172,7 +172,7 @@ def get_ai_move(board, player):
                             coord[0] += d[0]
                             coord[1] += d[1]
                             #print(cross_data)
-                            if len(cross_data['cords']) == 2:
+                            if len(cross_data['cords']) == board_props['num'] - 1:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
@@ -213,7 +213,7 @@ def get_ai_move(board, player):
                                 break
                             coord[0] += d[0]
                             coord[1] += d[1]
-                            if len(cross_data['cords']) == 2:
+                            if len(cross_data['cords']) == board_props['num'] - 1:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
@@ -280,7 +280,7 @@ def has_won_mateusz(board, player):
     else: 
         return False
 
-def has_won(board, player):
+def has_won(board, player, board_props):
     row_len = len(board[0])
     col_len = len(board)
 
@@ -295,7 +295,7 @@ def has_won(board, player):
                         row.clear()
                 except IndexError:
                     row.append([row_index, col_index])
-        if len(row) == 3:
+        if len(row) == board_props['num']:
             for cord in row:
                 board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
             player['points'] += 1
@@ -312,7 +312,7 @@ def has_won(board, player):
                         col.clear()
                 except IndexError:
                     col.append([row_index, col_index])
-        if len(col) == 3:
+        if len(col) == board_props['num']:
             for cord in col:
                 board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
             player['points'] += 1
@@ -322,12 +322,12 @@ def has_won(board, player):
 
     direct = {}
     for i in range(row_len):
-        if (row_len - i) > 3 - 1: # 3 - liczba znaków aby wygrać
+        if (row_len - i) > board_props['num'] - 1: # 3 - liczba znaków aby wygrać
             try:
                 direct[i].append(1)
             except KeyError:
                 direct[i] = [1]
-        if (i + 1) >= 3:
+        if (i + 1) >= board_props['num']:
             try:
                 direct[i].append(-1)
             except KeyError:
@@ -349,13 +349,13 @@ def has_won(board, player):
                         break
                     coord[0] += d[0]
                     coord[1] += d[1]
-                if len(cross) == 3:
-                    for cord in cross:
-                        board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
-                    player['points'] += 1
-                    return True
-                else:
-                    cross.clear()
+                    if len(cross) == board_props['num']:
+                        for cord in cross:
+                            board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+                        player['points'] += 1
+                        return True
+                
+                cross.clear()
         except KeyError:
             pass
 
@@ -363,25 +363,52 @@ def has_won(board, player):
     for col_index in range(1, col_len):
         try:
             for col_d in direct[col_index]:
-                d = [1, col_d]
+                d = [-1, col_d]
                 coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
                 while True:
                     try:
                         if player['mark'] in board[coord[0]][coord[1]]:
-                            cross.append([coord[0], coord[1]])
+                            cross.append([coord[0], coord[1]])                            
                         else:
                             cross.clear()
                     except IndexError:
                         break
                     coord[0] += d[0]
                     coord[1] += d[1]
-                if len(cross) == 3:
-                    for cord in cross:
-                        board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
-                    player['points'] += 1
-                    return True
-                else:
-                    cross.clear()
+                    if len(cross) == board_props['num']:
+                        for cord in cross:
+                            board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+                        player['points'] += 1
+                        return True
+                
+                cross.clear()
+        except KeyError:
+            pass
+    
+    cross = []
+    for row_index in range(1, row_len):
+        try:
+            for row_d in direct[row_index]:
+                d = [row_d, 1]
+                coord = [row_index, 0] # test od ostatniego wiersza i drugiej kolumny
+                while True:
+                    try:
+                        if player['mark'] in board[coord[0]][coord[1]]:
+                            cross.append([coord[0], coord[1]])
+                            
+                        else:
+                            cross.clear()
+                    except IndexError:
+                        break
+                    coord[0] += d[0]
+                    coord[1] += d[1]
+                
+                    if len(cross) == board_props['num']:
+                        for cord in cross:
+                            board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
+                        player['points'] += 1
+                        return True
+                cross.clear()
         except KeyError:
             pass
     
@@ -474,51 +501,51 @@ def print_result(winner):
         print(f"{winner} has won!")
 
 
-def tictactoe_game(board_size, mode, player1, player2):
-    board = init_board(int(board_size))
+def tictactoe_game(board_props, mode, player1, player2):
+    board = init_board(int(board_props['size']))
     if mode == 'HUMAN-HUMAN':
         # use get_move(), mark(), has_won(), is_full(), and print_board() to create game logic
         loop = True
         while loop:
-            clear()
+            #clear()
             print_board(board, player1, player2)
             row, col = get_move(board, player1)
             mark(board, player1, row, col)
-            if has_won(board, player1):
+            if has_won(board, player1, board_props):
                 winner = player1['mark']
-                clear()
+                #clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             elif is_full(board):
                 winner = 'tie'
-                clear()
+                #clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
-            clear()
+            #clear()
             print_board(board, player1, player2)
             row, col = get_move(board, player2)
             mark(board, player2, row, col)
-            if has_won(board, player2):
+            if has_won(board, player2, board_props):
                 winner = player2['mark']
-                clear()
+                #clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             elif is_full(board):
                 winner = 'tie'
-                clear()
+                #clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
     elif mode == 'HUMAN-AI' or mode == 'AI-HUMAN':
         # use get_move(), mark(), has_won(), is_full(), and print_board() to create game logic
@@ -533,15 +560,15 @@ def tictactoe_game(board_size, mode, player1, player2):
         while loop:
             clear()
             print_board(board, player1, player2)
-            row, col = get_move_first(board, player1)
+            row, col = get_move_first(board, player1, board_props)
             mark(board, player1, row, col)
-            if has_won(board, player1):
+            if has_won(board, player1, board_props):
                 winner = player1['mark']
                 clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             elif is_full(board):
                 winner = 'tie'
@@ -549,21 +576,21 @@ def tictactoe_game(board_size, mode, player1, player2):
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             clear()
             print_board(board, player1, player2)
-            output = get_move_second(board, player2)
+            output = get_move_second(board, player2, board_props)
             print(output)
             row, col = output
             mark(board, player2, row, col)
-            if has_won(board, player2):
+            if has_won(board, player2, board_props):
                 winner = player2['mark']
                 clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             elif is_full(board):
                 winner = 'tie'
@@ -571,22 +598,22 @@ def tictactoe_game(board_size, mode, player1, player2):
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
     elif mode == 'AI-AI':
         loop = True
         while loop:
             clear()
             print_board(board, player1, player2)
-            row, col = get_ai_move(board, player1)
+            row, col = get_ai_move(board, player1, board_props)
             mark(board, player1, row, col)
-            if has_won(board, player1):
+            if has_won(board, player1, board_props):
                 winner = player1['mark']
                 clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             elif is_full(board):
                 winner = 'tie'
@@ -594,21 +621,21 @@ def tictactoe_game(board_size, mode, player1, player2):
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             time.sleep(1)
             clear()
             print_board(board, player1, player2)
-            row, col = get_ai_move(board, player2)
+            row, col = get_ai_move(board, player2, board_props)
             mark(board, player2, row, col)
             time.sleep(1)
-            if has_won(board, player2):
+            if has_won(board, player2, board_props):
                 winner = player2['mark']
                 clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
             elif is_full(board):
                 winner = 'tie'
@@ -616,19 +643,19 @@ def tictactoe_game(board_size, mode, player1, player2):
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
-                next_game_question(board_size, mode, player1, player2)
+                next_game_question(board_props, mode, player1, player2)
                 #continue
 
 
 
-def next_game_question(board_size, mode, player1, player2):
+def next_game_question(board_props, mode, player1, player2):
     user_input = None
     if user_input is None:
         user_input = input("Next game? [y]yes, [n]no: ")
         if user_input not in ['y', 'n', 'quit']:
             user_input = None
         elif user_input == 'y':
-            tictactoe_game(board_size, mode, player1, player2)
+            tictactoe_game(board_props, mode, player1, player2)
         elif user_input == 'n':
             main_menu()
         elif user_input == 'quit':
@@ -637,8 +664,8 @@ def next_game_question(board_size, mode, player1, player2):
 
 def main_menu():
 #    tictactoe_game('HUMAN-HUMAN')
-    board_size, game_mode, player1, player2 = menu.main_menu(clear)
-    tictactoe_game(board_size, game_mode, player1, player2)
+    board_props, game_mode, player1, player2 = menu.main_menu(clear)
+    tictactoe_game(board_props, game_mode, player1, player2)
     #tictactoe_game('HUMAN-AI')
 
 

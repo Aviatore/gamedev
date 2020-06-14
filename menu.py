@@ -5,7 +5,10 @@ BLUE = "\033[34m"
 
 
 def main_menu(clear):
-    board_size = 3
+    board_props = {
+        'size': 3,
+        'num': 3
+    }
     game_mode = 'HUMAN-AI'
     user_input = None
     game_mode_dict = {
@@ -18,7 +21,7 @@ def main_menu(clear):
     while user_input is None:
         clear()
         print("MENU")
-        print(f"1. Board size: {board_size}x{board_size}")
+        print(f"1. Board properties: {board_props['size']}x{board_props['size']}")
         print(f"2. Game mode: {game_mode_dict[game_mode]}")
         print("3. Next step")
         print(msg)
@@ -36,17 +39,17 @@ def main_menu(clear):
             user_input = None
             continue
         elif user_input == '1':
-            board_size = get_board_size(clear)
+            board_properties(clear, board_props)
             user_input = None
         elif user_input == '2':
             game_mode = get_game_mode(clear)
             user_input = None
         elif user_input == '3':
-            player1, player2 = game_properties(board_size, game_mode, clear)
-    return board_size, game_mode, player1, player2
+            player1, player2 = game_properties(game_mode, clear)
+    return board_props, game_mode, player1, player2
 
 
-def get_board_size(clear):
+def get_board_size(clear, board_props):
     board_size = None
     msg = ""
     while board_size is None:
@@ -66,8 +69,58 @@ def get_board_size(clear):
         elif int(board_size) not in range(3, 10):
             msg = "Please, input a digit within a range from 3 to 9"
             board_size = None
-    return board_size
+    board_props['size'] = int(board_size)
 
+def board_properties(clear, board_props):
+    user_input = None
+    msg = ""
+    while user_input is None:
+        clear()
+        print("MENU->Board properties")
+        print(f"1. Board size: {board_props['size']}x{board_props['size']}")
+        print(f"2. Number of marks to win: {board_props['num']}")
+        print("3. Back")
+        print(msg)
+        msg = ""
+        user_input = input("> ")
+        if user_input == 'quit':
+            print("Good bye!")
+            exit()
+        elif not user_input.isdigit():
+            msg = "Please, input a digit (1 or 2)."
+            user_input = None
+        elif int(user_input) not in range(1, 4):
+            msg = "Please, input a digit (1 or 2)."
+            user_input = None
+        elif user_input == '1':
+            get_board_size(clear, board_props)
+            user_input = None
+        elif user_input == '2':
+            get_number_marks(clear, board_props)
+            user_input = None
+        elif user_input == '3':
+            pass
+
+def get_number_marks(clear, board_props):
+    user_input = None
+    msg = ""
+    min = 3
+    max = (board_props['size'] - min) + min
+    while user_input is None:
+        clear()
+        print("MENU->Board properties->Number of marks")
+        print(msg)
+        user_input = input(f"Number of marks to win (choose between {min}-{max}): ")
+        if user_input == 'quit':
+            print("Good bye!")
+            exit()
+        elif not user_input.isdigit():
+            msg = f"Please, input a digit (choose between {min}-{max})."
+            user_input = None
+        elif int(user_input) not in range(min, max + 1):
+            msg = f"Please, input a digit (choose between {min}-{max})."
+            user_input = None
+    board_props['num'] = int(user_input)
 
 def get_game_mode(clear):
     game_mode_dict = {
@@ -101,7 +154,7 @@ def get_game_mode(clear):
     return game_mode_dict[get_game_mode]
 
 
-def game_properties(board_size, game_mode, clear):
+def game_properties(game_mode, clear):
     
     if game_mode == 'HUMAN-HUMAN':
         player1 = {
