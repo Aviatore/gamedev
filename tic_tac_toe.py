@@ -524,14 +524,19 @@ def print_board(board, player1, player2):
     for i in range(row_len):
         line.append("---")
     
-    print(f"{player1['name']} : {player2['name']}")
-    print(f"{str(player1['points']).rjust(len(player1['name']))} : {player2['points']}")
+    board_total_length = (row_len * 3) + (row_len - 1) + 2
+    score_names = f"{player1['name']} : {player2['name']}"
+    score = f"{str(player1['points']).rjust(len(player1['name']))} : {player2['points']}"
+    score_offset = int((board_total_length - len(score_names)) / 2)
+    print(" "*score_offset + score_names)
+    print(" "*score_offset + score)
     print("")
     print("  ", "   ".join(cols_str))
     for index in range(col_len):
         print(f"{rows[index]}  {' | '.join(board[index])}")
         if index < row_len - 1:
             print(" ", "+".join(line))
+    print("")
     
 
 def print_result(winner):
