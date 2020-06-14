@@ -53,168 +53,172 @@ def get_ai_move(board, player):
 
     row_len = len(board[0])
     col_len = len(board)
-
-    for mark in ['O', 'X']:
-        row_data = {
-            'free_cords': [],
-            'cords': []
-        }
-        for row_index in range(row_len):
-            for col_index in range(col_len):
-                if mark in board[row_index][col_index]:
-                    try:
-                        if [row_index, col_index - 1] in row_data['cords'] or [row_index, col_index - 1] in row_data['free_cords']:
-                            row_data['cords'].append([row_index, col_index])
-                        else:
-                            row_data['cords'].clear()
-                            row_data['free_cords'].clear()
-                            row_data['cords'].append([row_index, col_index])
-                    except IndexError:
-                        row_data['cords'].append([row_index, col_index])
-                elif board[row_index][col_index] == '.' and [row_index, col_index - 1] not in row_data['free_cords']:
-                    row_data['free_cords'].append([row_index, col_index])
-                #else:
-                #    row_data['cords'].clear()
-                #    row_data['free_cords'].clear()
-
-                if len(row_data['cords']) == 2:
-                    if len(row_data['free_cords']) > 0:
-                        row = row_data['free_cords'][0][0]
-                        col = row_data['free_cords'][0][1]
-                        return row, col
-            #else:
-            row_data['cords'].clear()
-            row_data['free_cords'].clear()
-
-        
-        col_data = {
-            'free_cords': [],
-            'cords': []
-        }
-        for col_index in range(col_len):
+    if player['level'] == "Easy":
+        free_places = get_free_places(board)
+        row, col = free_places[random.randrange(len(free_places))]
+        return row, col
+    elif player['level'] == "Medium" or player['level'] == "Hard":
+        for mark in ['O', 'X']:
+            row_data = {
+                'free_cords': [],
+                'cords': []
+            }
             for row_index in range(row_len):
-                if mark in board[row_index][col_index]:
-                    try:
-                        if [row_index - 1, col_index] in col_data['cords'] or [row_index - 1, col_index] in col_data['free_cords']:
-                            col_data['cords'].append([row_index, col_index])
-                        else:
-                            col_data['cords'].clear()
-                            col_data['free_cords'].clear()
-                            col_data['cords'].append([row_index, col_index])
-                    except IndexError:
-                        col_data['cords'].append([row_index, col_index])
-                elif board[row_index][col_index] == '.' and [row_index - 1, col_index] not in col_data['free_cords']:
-                    col_data['free_cords'].append([row_index, col_index])
+                for col_index in range(col_len):
+                    if mark in board[row_index][col_index]:
+                        try:
+                            if [row_index, col_index - 1] in row_data['cords'] or [row_index, col_index - 1] in row_data['free_cords']:
+                                row_data['cords'].append([row_index, col_index])
+                            else:
+                                row_data['cords'].clear()
+                                row_data['free_cords'].clear()
+                                row_data['cords'].append([row_index, col_index])
+                        except IndexError:
+                            row_data['cords'].append([row_index, col_index])
+                    elif board[row_index][col_index] == '.' and [row_index, col_index - 1] not in row_data['free_cords']:
+                        row_data['free_cords'].append([row_index, col_index])
+                    #else:
+                    #    row_data['cords'].clear()
+                    #    row_data['free_cords'].clear()
+
+                    if len(row_data['cords']) == 2:
+                        if len(row_data['free_cords']) > 0:
+                            row = row_data['free_cords'][0][0]
+                            col = row_data['free_cords'][0][1]
+                            return row, col
                 #else:
-                #    col_data['cords'].clear()
-                #    col_data['free_cords'].clear()
+                row_data['cords'].clear()
+                row_data['free_cords'].clear()
 
-                if len(col_data['cords']) == 2:
-                    if len(col_data['free_cords']) > 0:
-                        row = col_data['free_cords'][0][0]
-                        col = col_data['free_cords'][0][1]
-                        return row, col
-            #else:
-            col_data['cords'].clear()
-            col_data['free_cords'].clear()
-
-        direct = {}
-        for i in range(row_len):
-            if (row_len - i) > 3 - 1: # 3 - liczba znaków aby wygrać
-                try:
-                    direct[i].append(1)
-                except KeyError:
-                    direct[i] = [1]
-            if (i + 1) >= 3:
-                try:
-                    direct[i].append(-1)
-                except KeyError:
-                    direct[i] = [-1]
-
-        cross_data = {
-            'free_cords': [],
-            'cords': []
-        }
-        for col_index in range(col_len):
-            try:
-                for col_d in direct[col_index]:
-                    d = [1, col_d]
-                    coord = [0, col_index]
-                    while True:
+            
+            col_data = {
+                'free_cords': [],
+                'cords': []
+            }
+            for col_index in range(col_len):
+                for row_index in range(row_len):
+                    if mark in board[row_index][col_index]:
                         try:
-                            if mark in board[coord[0]][coord[1]]:
-                                try:
-                                    if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
-                                        cross_data['cords'].append([coord[0], coord[1]])
-                                    else:
-                                        cross_data['cords'].clear()
-                                        cross_data['free_cords'].clear()
-                                        cross_data['cords'].append([coord[0], coord[1]])
-                                except IndexError:
-                                    cross_data['cords'].append([coord[0], coord[1]])
-                            elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
-                                cross_data['free_cords'].append([coord[0], coord[1]])
-                            #else:
-                            #    cross_data['cords'].clear()
-                            #    cross_data['free_cords'].clear()
+                            if [row_index - 1, col_index] in col_data['cords'] or [row_index - 1, col_index] in col_data['free_cords']:
+                                col_data['cords'].append([row_index, col_index])
+                            else:
+                                col_data['cords'].clear()
+                                col_data['free_cords'].clear()
+                                col_data['cords'].append([row_index, col_index])
                         except IndexError:
-                            break
-                        coord[0] += d[0]
-                        coord[1] += d[1]
-                        #print(cross_data)
-                        if len(cross_data['cords']) == 2:
-                            if len(cross_data['free_cords']) > 0:
-                                row = cross_data['free_cords'][0][0]
-                                col = cross_data['free_cords'][0][1]
-                                return row, col
+                            col_data['cords'].append([row_index, col_index])
+                    elif board[row_index][col_index] == '.' and [row_index - 1, col_index] not in col_data['free_cords']:
+                        col_data['free_cords'].append([row_index, col_index])
                     #else:
-                    cross_data['cords'].clear()
-                    cross_data['free_cords'].clear()
-            except KeyError:
-                pass
+                    #    col_data['cords'].clear()
+                    #    col_data['free_cords'].clear()
 
-        cross_data = {
-            'free_cords': [],
-            'cords': []
-        }
-        for col_index in range(1, col_len):
-            try:
-                for col_d in direct[col_index]:
-                    d = [1, col_d]
-                    coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
-                    while True:
-                        try:
-                            if mark in board[coord[0]][coord[1]]:
-                                try:
-                                    if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
-                                        cross_data['cords'].append([coord[0], coord[1]])
-                                    else:
-                                        cross_data['cords'].clear()
-                                        cross_data['free_cords'].clear()
-                                        cross_data['cords'].append([coord[0], coord[1]])
-                                except IndexError:
-                                    cross_data['cords'].append([coord[0], coord[1]])
-                            elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
-                                cross_data['free_cords'].append([coord[0], coord[1]])
-                            #else:
-                            #    cross_data['cords'].clear()
-                            #    cross_data['free_cords'].clear()
-                        except IndexError:
-                            break
-                        coord[0] += d[0]
-                        coord[1] += d[1]
-                        if len(cross_data['cords']) == 2:
-                            if len(cross_data['free_cords']) > 0:
-                                row = cross_data['free_cords'][0][0]
-                                col = cross_data['free_cords'][0][1]
-                                return row, col
-                    #else:
-                    cross_data['cords'].clear()
-                    cross_data['free_cords'].clear()
-            except KeyError:
-                pass
+                    if len(col_data['cords']) == 2:
+                        if len(col_data['free_cords']) > 0:
+                            row = col_data['free_cords'][0][0]
+                            col = col_data['free_cords'][0][1]
+                            return row, col
+                #else:
+                col_data['cords'].clear()
+                col_data['free_cords'].clear()
 
-    if row_len == 3:
+            direct = {}
+            for i in range(row_len):
+                if (row_len - i) > 3 - 1: # 3 - liczba znaków aby wygrać
+                    try:
+                        direct[i].append(1)
+                    except KeyError:
+                        direct[i] = [1]
+                if (i + 1) >= 3:
+                    try:
+                        direct[i].append(-1)
+                    except KeyError:
+                        direct[i] = [-1]
+
+            cross_data = {
+                'free_cords': [],
+                'cords': []
+            }
+            for col_index in range(col_len):
+                try:
+                    for col_d in direct[col_index]:
+                        d = [1, col_d]
+                        coord = [0, col_index]
+                        while True:
+                            try:
+                                if mark in board[coord[0]][coord[1]]:
+                                    try:
+                                        if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                        else:
+                                            cross_data['cords'].clear()
+                                            cross_data['free_cords'].clear()
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                    except IndexError:
+                                        cross_data['cords'].append([coord[0], coord[1]])
+                                elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                #else:
+                                #    cross_data['cords'].clear()
+                                #    cross_data['free_cords'].clear()
+                            except IndexError:
+                                break
+                            coord[0] += d[0]
+                            coord[1] += d[1]
+                            #print(cross_data)
+                            if len(cross_data['cords']) == 2:
+                                if len(cross_data['free_cords']) > 0:
+                                    row = cross_data['free_cords'][0][0]
+                                    col = cross_data['free_cords'][0][1]
+                                    return row, col
+                        #else:
+                        cross_data['cords'].clear()
+                        cross_data['free_cords'].clear()
+                except KeyError:
+                    pass
+
+            cross_data = {
+                'free_cords': [],
+                'cords': []
+            }
+            for col_index in range(1, col_len):
+                try:
+                    for col_d in direct[col_index]:
+                        d = [1, col_d]
+                        coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
+                        while True:
+                            try:
+                                if mark in board[coord[0]][coord[1]]:
+                                    try:
+                                        if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                        else:
+                                            cross_data['cords'].clear()
+                                            cross_data['free_cords'].clear()
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                    except IndexError:
+                                        cross_data['cords'].append([coord[0], coord[1]])
+                                elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                #else:
+                                #    cross_data['cords'].clear()
+                                #    cross_data['free_cords'].clear()
+                            except IndexError:
+                                break
+                            coord[0] += d[0]
+                            coord[1] += d[1]
+                            if len(cross_data['cords']) == 2:
+                                if len(cross_data['free_cords']) > 0:
+                                    row = cross_data['free_cords'][0][0]
+                                    col = cross_data['free_cords'][0][1]
+                                    return row, col
+                        #else:
+                        cross_data['cords'].clear()
+                        cross_data['free_cords'].clear()
+                except KeyError:
+                    pass
+    
+    if player['level'] == "Hard" and row_len == 3:
         if board[1][1] == '.':
             row = 1
             col = 1
