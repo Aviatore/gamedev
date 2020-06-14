@@ -190,8 +190,49 @@ def get_ai_move(board, player, board_props):
             for col_index in range(1, col_len):
                 try:
                     for col_d in direct[col_index]:
-                        d = [1, col_d]
+                        d = [-1, col_d]
                         coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
+                        while True:
+                            try:
+                                if mark in board[coord[0]][coord[1]]:
+                                    try:
+                                        if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                        else:
+                                            cross_data['cords'].clear()
+                                            cross_data['free_cords'].clear()
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                    except IndexError:
+                                        cross_data['cords'].append([coord[0], coord[1]])
+                                elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                #else:
+                                #    cross_data['cords'].clear()
+                                #    cross_data['free_cords'].clear()
+                            except IndexError:
+                                break
+                            coord[0] += d[0]
+                            coord[1] += d[1]
+                            if len(cross_data['cords']) == board_props['num'] - 1:
+                                if len(cross_data['free_cords']) > 0:
+                                    row = cross_data['free_cords'][0][0]
+                                    col = cross_data['free_cords'][0][1]
+                                    return row, col
+                        #else:
+                        cross_data['cords'].clear()
+                        cross_data['free_cords'].clear()
+                except KeyError:
+                    pass
+            
+            cross_data = {
+                'free_cords': [],
+                'cords': []
+            }
+            for row_index in range(1, row_len):
+                try:
+                    for row_d in direct[row_index]:
+                        d = [row_d, 1]
+                        coord = [row_index, 0]
                         while True:
                             try:
                                 if mark in board[coord[0]][coord[1]]:
