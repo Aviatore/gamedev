@@ -211,8 +211,8 @@ def game_properties(board_size, game_mode, clear):
             clear()
             print("MENU->Game properties")
             print("Please, input a digit (1, 2, 3 or 4) that corresponds to the chosen setting that you want change.")
-            print(f"1. Computer1 settings: {computer1['name']} {computer1['mark']}")
-            print(f"2. Computer2 settings: {computer2['name']} {computer2['mark']}")
+            print(f"1. Computer1 settings: {computer1['name']} {computer1['color']}{computer1['mark']}{WHITE}")
+            print(f"2. Computer2 settings: {computer2['name']} {computer2['color']}{computer2['mark']}{WHITE}")
             print("3. Back to menu")
             print("4. Start game")
             print(msg)
@@ -228,9 +228,10 @@ def game_properties(board_size, game_mode, clear):
                 continue
             elif user_input == '1':
                 get_player_prop('Computer1', computer1, clear)
-            elif user_input == '2':
                 user_input = None
+            elif user_input == '2':
                 get_player_prop('Computer2', computer2, clear)
+                user_input = None
             elif user_input == '3':
                 main_menu(clear)
                 user_input = None

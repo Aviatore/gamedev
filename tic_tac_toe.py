@@ -1,5 +1,6 @@
 import subprocess as sub
 import random
+import time
 import menu
 
 GREEN = "\033[32m"
@@ -538,6 +539,47 @@ def tictactoe_game(board_size, mode, player1, player2):
             print(output)
             row, col = output
             mark(board, player2, row, col)
+            if has_won(board, player2):
+                winner = player2['mark']
+                clear()
+                print_board(board)
+                print_result(winner)
+                loop = False
+                continue
+            elif is_full(board):
+                winner = 'tie'
+                clear()
+                print_board(board)
+                print_result(winner)
+                loop = False
+                continue
+    elif mode == 'AI-AI':
+        loop = True
+        while loop:
+            clear()
+            print_board(board)
+            row, col = get_ai_move(board, player1)
+            mark(board, player1, row, col)
+            if has_won(board, player1):
+                winner = player1['mark']
+                clear()
+                print_board(board)
+                print_result(winner)
+                loop = False
+                continue
+            elif is_full(board):
+                winner = 'tie'
+                clear()
+                print_board(board)
+                print_result(winner)
+                loop = False
+                continue
+            time.sleep(1)
+            clear()
+            print_board(board)
+            row, col = get_ai_move(board, player2)
+            mark(board, player2, row, col)
+            time.sleep(1)
             if has_won(board, player2):
                 winner = player2['mark']
                 clear()
