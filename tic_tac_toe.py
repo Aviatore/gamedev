@@ -395,6 +395,8 @@ def has_won(board, player, board_props):
                             board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
                         player['points'] += 1
                         return True
+                    if coord[0] < 0 or coord[1] < 0:
+                        break
                 
                 cross.clear()
         except KeyError:
@@ -421,6 +423,8 @@ def has_won(board, player, board_props):
                             board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
                         player['points'] += 1
                         return True
+                    if coord[0] < 0 or coord[1] < 0:
+                        break
                 
                 cross.clear()
         except KeyError:
@@ -449,6 +453,8 @@ def has_won(board, player, board_props):
                             board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
                         player['points'] += 1
                         return True
+                    if coord[0] < 0 or coord[1] < 0:
+                        break
                 cross.clear()
         except KeyError:
             pass
