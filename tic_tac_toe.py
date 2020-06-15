@@ -164,15 +164,24 @@ def get_ai_move(board, player, board_props):
                                         cross_data['cords'].append([coord[0], coord[1]])
                                 elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
                                     cross_data['free_cords'].append([coord[0], coord[1]])
-                                #else:
-                                #    cross_data['cords'].clear()
-                                #    cross_data['free_cords'].clear()
+                                elif board[coord[0]][coord[1]] == '.':
+                                    cross_data['cords'].clear()
+                                    cross_data['free_cords'].clear()
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                else:
+                                    cross_data['cords'].clear()
+                                    cross_data['free_cords'].clear()
+                                    
                             except IndexError:
                                 break
                             coord[0] += d[0]
                             coord[1] += d[1]
                             #print(cross_data)
-                            if len(cross_data['cords']) == board_props['num'] - 1:
+                            if (row_len - board_props['num']) >= 2:
+                                len_to_react = 2
+                            else:
+                                len_to_react = 1
+                            if len(cross_data['cords']) == board_props['num'] - len_to_react:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
@@ -206,14 +215,22 @@ def get_ai_move(board, player, board_props):
                                         cross_data['cords'].append([coord[0], coord[1]])
                                 elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
                                     cross_data['free_cords'].append([coord[0], coord[1]])
-                                #else:
-                                #    cross_data['cords'].clear()
-                                #    cross_data['free_cords'].clear()
+                                elif board[coord[0]][coord[1]] == '.':
+                                    cross_data['cords'].clear()
+                                    cross_data['free_cords'].clear()
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                else:
+                                    cross_data['cords'].clear()
+                                    cross_data['free_cords'].clear()
                             except IndexError:
                                 break
                             coord[0] += d[0]
                             coord[1] += d[1]
-                            if len(cross_data['cords']) == board_props['num'] - 1:
+                            if (row_len - board_props['num']) >= 2:
+                                len_to_react = 2
+                            else:
+                                len_to_react = 1
+                            if len(cross_data['cords']) == board_props['num'] - len_to_react:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
@@ -247,14 +264,22 @@ def get_ai_move(board, player, board_props):
                                         cross_data['cords'].append([coord[0], coord[1]])
                                 elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
                                     cross_data['free_cords'].append([coord[0], coord[1]])
-                                #else:
-                                #    cross_data['cords'].clear()
-                                #    cross_data['free_cords'].clear()
+                                elif board[coord[0]][coord[1]] == '.':
+                                    cross_data['cords'].clear()
+                                    cross_data['free_cords'].clear()
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                else:
+                                    cross_data['cords'].clear()
+                                    cross_data['free_cords'].clear()
                             except IndexError:
                                 break
                             coord[0] += d[0]
                             coord[1] += d[1]
-                            if len(cross_data['cords']) == board_props['num'] - 1:
+                            if (row_len - board_props['num']) >= 2:
+                                len_to_react = 2
+                            else:
+                                len_to_react = 1
+                            if len(cross_data['cords']) == board_props['num'] - len_to_react:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
