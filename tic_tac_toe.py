@@ -69,11 +69,6 @@ def get_ai_move(board, player, board_props):
                 'free_cords': [],
                 'cords': []
             }
-            best_moves = {
-                'num': 0,
-                'cord': []
-            }
-
             for row_index in range(row_len):
                 for col_index in range(col_len):
                     if mark in board[row_index][col_index]:
@@ -92,19 +87,16 @@ def get_ai_move(board, player, board_props):
                     #    row_data['cords'].clear()
                     #    row_data['free_cords'].clear()
 
-                    if 3 <= len(row_data['cords']) <= board_props['num'] - 1:
+                    if len(row_data['cords']) == board_props['num'] - 1:
                         if len(row_data['free_cords']) > 0:
                             row = row_data['free_cords'][0][0]
                             col = row_data['free_cords'][0][1]
-                            if len(row_data['cords']) > best_moves['num']:
-                                best_moves['cord'] = [row, col]
-                            #return row, col
+                            return row, col
                 #else:
                 row_data['cords'].clear()
                 row_data['free_cords'].clear()
 
             
-
             col_data = {
                 'free_cords': [],
                 'cords': []
@@ -127,30 +119,28 @@ def get_ai_move(board, player, board_props):
                     #    col_data['cords'].clear()
                     #    col_data['free_cords'].clear()
 
-                    if 3 <= len(col_data['cords']) <= board_props['num'] - 1:
+                    if len(col_data['cords']) == board_props['num'] - 1:
                         if len(col_data['free_cords']) > 0:
                             row = col_data['free_cords'][0][0]
                             col = col_data['free_cords'][0][1]
-                            if len(col_data['cords']) > best_moves['num']:
-                                best_moves['cord'] = [row, col]
-                            #return row, col
+                            return row, col
                 #else:
                 col_data['cords'].clear()
                 col_data['free_cords'].clear()
 
             direct = {}
             for i in range(row_len):
-                if (row_len - i) > board_props['num'] - 1: # 3 - liczba znaków aby wygrać
+                if (row_len - i) > 3 - 1: # 3 - liczba znaków aby wygrać
                     try:
                         direct[i].append(1)
                     except KeyError:
                         direct[i] = [1]
-                if (i + 1) >= board_props['num']:
+                if (i + 1) >= 3:
                     try:
                         direct[i].append(-1)
                     except KeyError:
                         direct[i] = [-1]
-            print(f"direct: {direct}")
+
             cross_data = {
                 'free_cords': [],
                 'cords': []
@@ -182,21 +172,57 @@ def get_ai_move(board, player, board_props):
                             coord[0] += d[0]
                             coord[1] += d[1]
                             #print(cross_data)
-                            if 3 <= len(cross_data['cords']) <= board_props['num'] - 1:
+                            if len(cross_data['cords']) == board_props['num'] - 1:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
-                                    if len(cross_data['cords']) > best_moves['num']:
-                                        best_moves['cord'] = [row, col]
-                                    #return row, col
-                            if coord[0] < 0 or coord[1] < 0:
-                                break
+                                    return row, col
                         #else:
                         cross_data['cords'].clear()
                         cross_data['free_cords'].clear()
                 except KeyError:
                     pass
 
+            cross_data = {
+                'free_cords': [],
+                'cords': []
+            }
+            for col_index in range(1, col_len):
+                try:
+                    for col_d in direct[col_index]:
+                        d = [-1, col_d]
+                        coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
+                        while True:
+                            try:
+                                if mark in board[coord[0]][coord[1]]:
+                                    try:
+                                        if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                        else:
+                                            cross_data['cords'].clear()
+                                            cross_data['free_cords'].clear()
+                                            cross_data['cords'].append([coord[0], coord[1]])
+                                    except IndexError:
+                                        cross_data['cords'].append([coord[0], coord[1]])
+                                elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
+                                    cross_data['free_cords'].append([coord[0], coord[1]])
+                                #else:
+                                #    cross_data['cords'].clear()
+                                #    cross_data['free_cords'].clear()
+                            except IndexError:
+                                break
+                            coord[0] += d[0]
+                            coord[1] += d[1]
+                            if len(cross_data['cords']) == board_props['num'] - 1:
+                                if len(cross_data['free_cords']) > 0:
+                                    row = cross_data['free_cords'][0][0]
+                                    col = cross_data['free_cords'][0][1]
+                                    return row, col
+                        #else:
+                        cross_data['cords'].clear()
+                        cross_data['free_cords'].clear()
+                except KeyError:
+                    pass
             
             cross_data = {
                 'free_cords': [],
@@ -228,73 +254,16 @@ def get_ai_move(board, player, board_props):
                                 break
                             coord[0] += d[0]
                             coord[1] += d[1]
-                            #print(f"cross_data: {cross_data}")
-                            if 3 <= len(cross_data['cords']) <= board_props['num'] - 1:
-                                
+                            if len(cross_data['cords']) == board_props['num'] - 1:
                                 if len(cross_data['free_cords']) > 0:
                                     row = cross_data['free_cords'][0][0]
                                     col = cross_data['free_cords'][0][1]
-                                    if len(cross_data['cords']) > best_moves['num']:
-                                        best_moves['cord'] = [row, col]
-                                    #return row, col
-                            if coord[0] < 0 or coord[1] < 0:
-                                break
+                                    return row, col
                         #else:
                         cross_data['cords'].clear()
                         cross_data['free_cords'].clear()
                 except KeyError:
                     pass
-            
-            
-            cross_data = {
-                'free_cords': [],
-                'cords': []
-            }
-            for col_index in range(1, col_len):
-                try:
-                    for col_d in direct[col_index]:
-                        d = [-1, col_d]
-                        coord = [row_len - 1, col_index] # test od ostatniego wiersza i drugiej kolumny
-                        while True:
-                            try:
-                                if mark in board[coord[0]][coord[1]]:
-                                    try:
-                                        if [coord[0] - d[0], coord[1] - d[1]] in cross_data['cords'] or [coord[0] - d[0], coord[1] - d[1]] in cross_data['free_cords']:
-                                            cross_data['cords'].append([coord[0], coord[1]])
-                                        else:
-                                            cross_data['cords'].clear()
-                                            cross_data['free_cords'].clear()
-                                            cross_data['cords'].append([coord[0], coord[1]])
-                                    except IndexError:
-                                        cross_data['cords'].append([coord[0], coord[1]])
-                                elif board[coord[0]][coord[1]] == '.' and [coord[0] - d[0], coord[1] - d[1]] not in cross_data['free_cords']:
-                                    cross_data['free_cords'].append([coord[0], coord[1]])
-                                #else:
-                                #    cross_data['cords'].clear()
-                                #    cross_data['free_cords'].clear()
-                            except IndexError:
-                                break
-                            coord[0] += d[0]
-                            coord[1] += d[1]
-                            print(f"cross_data: {cross_data}")
-                            if 3 <= len(cross_data['cords']) <= board_props['num'] - 1:
-                                if len(cross_data['free_cords']) > 0:
-                                    row = cross_data['free_cords'][0][0]
-                                    col = cross_data['free_cords'][0][1]
-                                    if len(cross_data['cords']) > best_moves['num']:
-                                        best_moves['cord'] = [row, col]
-                                    #return row, col
-                            if coord[0] < 0 or coord[1] < 0:
-                                break
-                        #else:
-                        cross_data['cords'].clear()
-                        cross_data['free_cords'].clear()
-                except KeyError:
-                    pass
-            
-            if len(best_moves['cord']) == 2:
-                return best_moves['cord'][0], best_moves['cord'][1]
-            
     
     if player['level'] == "Hard" and row_len == 3:
         if board[1][1] == '.':
@@ -422,13 +391,10 @@ def has_won(board, player, board_props):
                     coord[0] += d[0]
                     coord[1] += d[1]
                     if len(cross) == board_props['num']:
-                        print(cross)
                         for cord in cross:
                             board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
                         player['points'] += 1
                         return True
-                    if coord[0] < 0 or coord[1] < 0:
-                        break
                 
                 cross.clear()
         except KeyError:
@@ -451,13 +417,10 @@ def has_won(board, player, board_props):
                     coord[0] += d[0]
                     coord[1] += d[1]
                     if len(cross) == board_props['num']:
-                        print(cross)
                         for cord in cross:
                             board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
                         player['points'] += 1
                         return True
-                    if coord[0] < 0 or coord[1] < 0:
-                        break
                 
                 cross.clear()
         except KeyError:
@@ -482,13 +445,10 @@ def has_won(board, player, board_props):
                     coord[1] += d[1]
                 
                     if len(cross) == board_props['num']:
-                        print(cross)
                         for cord in cross:
                             board[cord[0]][cord[1]] = f"{GREEN}{player['mark']}{WHITE}"
                         player['points'] += 1
                         return True
-                    if coord[0] < 0 or coord[1] < 0:
-                        break
                 cross.clear()
         except KeyError:
             pass
@@ -644,13 +604,13 @@ def tictactoe_game(board_props, mode, player1, player2):
             get_move_second = get_move
 
         while loop:
-            #clear()
+            clear()
             print_board(board, player1, player2)
             row, col = get_move_first(board, player1, board_props)
             mark(board, player1, row, col)
             if has_won(board, player1, board_props):
                 winner = player1['mark']
-                #clear()
+                clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
@@ -658,13 +618,13 @@ def tictactoe_game(board_props, mode, player1, player2):
                 #continue
             elif is_full(board):
                 winner = 'tie'
-                #clear()
+                clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
                 next_game_question(board_props, mode, player1, player2)
                 #continue
-            #clear()
+            clear()
             print_board(board, player1, player2)
             output = get_move_second(board, player2, board_props)
             print(output)
@@ -672,7 +632,7 @@ def tictactoe_game(board_props, mode, player1, player2):
             mark(board, player2, row, col)
             if has_won(board, player2, board_props):
                 winner = player2['mark']
-                #clear()
+                clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
@@ -680,7 +640,7 @@ def tictactoe_game(board_props, mode, player1, player2):
                 #continue
             elif is_full(board):
                 winner = 'tie'
-                #clear()
+                clear()
                 print_board(board, player1, player2)
                 print_result(winner)
                 loop = False
