@@ -3,6 +3,14 @@ RED = "\033[31m"
 YELLOW = "\033[33m"
 BLUE = "\033[34m"
 
+def print_logo():
+    print("""
+ ______   __     ______     ______   ______     ______     ______   ______     ______    
+/\__  _\ /\ \   /\  ___\   /\__  _\ /\  __ \   /\  ___\   /\__  _\ /\  __ \   /\  ___\   
+\/_/\ \/ \ \ \  \ \ \____  \/_/\ \/ \ \  __ \  \ \ \____  \/_/\ \/ \ \ \/\ \  \ \  __\   
+   \ \_\  \ \_\  \ \_____\    \ \_\  \ \_\ \_\  \ \_____\    \ \_\  \ \_____\  \ \_____\ 
+    \/_/   \/_/   \/_____/     \/_/   \/_/\/_/   \/_____/     \/_/   \/_____/   \/_____/ 
+    """)
 
 def main_menu(clear):
     board_props = {
@@ -20,6 +28,7 @@ def main_menu(clear):
     msg = ""
     while user_input is None:
         clear()
+        print_logo()
         print("MENU")
         print(f"1. Board properties: {board_props['size']}x{board_props['size']}")
         print(f"2. Game mode: {game_mode_dict[game_mode]}")
@@ -54,6 +63,7 @@ def get_board_size(clear, board_props):
     msg = ""
     while board_size is None:
         clear()
+        print_logo()
         print("MENU->Board size")
         print("Please, input a single digit from 3 to 9 that corresponds to the number of rows and columns.")
         print("Example: user input: 3 corresponds to the board size: 3x3")
@@ -76,6 +86,7 @@ def board_properties(clear, board_props):
     msg = ""
     while user_input is None:
         clear()
+        print_logo()
         print("MENU->Board properties")
         print(f"1. Board size: {board_props['size']}x{board_props['size']}")
         print(f"2. Number of marks to win: {board_props['num']}")
@@ -108,6 +119,7 @@ def get_number_marks(clear, board_props):
     max = (board_props['size'] - min) + min
     while user_input is None:
         clear()
+        print_logo()
         print("MENU->Board properties->Number of marks")
         print(msg)
         user_input = input(f"Number of marks to win (choose between {min}-{max}): ")
@@ -133,6 +145,7 @@ def get_game_mode(clear):
     msg = ""
     while get_game_mode is None:
         clear()
+        print_logo()
         print("MENU->Game mode")
         print("Please, input a digit (1, 2, 3 or 4) that corresponds to the chosen game mode.")
         print("1. Human vs. Human")
@@ -173,6 +186,7 @@ def game_properties(game_mode, clear):
         msg = ""
         while user_input is None:
             clear()
+            print_logo()
             print("MENU->Game properties")
             print("Please, input a digit (1, 2, 3 or 4) that corresponds to the chosen setting that you want change.")
             print(f"1. Player1 settings: {player1['name']} {player1['color']}{player1['mark']}{WHITE}")
@@ -229,6 +243,7 @@ def game_properties(game_mode, clear):
         msg = ""
         while user_input is None:
             clear()
+            print_logo()
             print("MENU->Game properties")
             print("Please, input a digit (1, 2, 3 or 4) that corresponds to the chosen setting that you want change.")
             print(f"1. Player settings: {player['name']} {player['color']}{player['mark']}{WHITE}")
@@ -283,6 +298,7 @@ def game_properties(game_mode, clear):
         msg = ""
         while user_input is None:
             clear()
+            print_logo()
             print("MENU->Game properties")
             print("Please, input a digit (1, 2, 3 or 4) that corresponds to the chosen setting that you want change.")
             print(f"1. Computer1 settings: {computer1['name']} {computer1['color']}{computer1['mark']}{WHITE}")
@@ -322,6 +338,7 @@ def get_player_prop(player_type, player, clear):
     if 'Player' in player_type:
         while user_input is None:
             clear()
+            print_logo()
             print(f"MENU->Game properties->{player_type} settings")
             print(f"1. {player_type}'s name: {player['name']}")
             print(f"2. {player_type}'s mark color: {player['color']}{player['mark']}{WHITE}")
@@ -349,6 +366,7 @@ def get_player_prop(player_type, player, clear):
     elif 'Computer' in player_type:
         while user_input is None:
             clear()
+            print_logo()
             print(f"MENU->Game properties->{player_type} settings")
             print(f"1. {player_type}'s mark color: {player['color']}{player['mark']}{WHITE}")
             print(f"2. Level: {player['level']}")
@@ -385,6 +403,7 @@ def get_player_level(clear):
     msg = ""
     while level is None:
         clear()
+        print_logo()
         print("MENU->Game mode")
         print("Please, input a digit (1, 2, 3 or 4) that corresponds to the chosen game mode.")
         print("1. Easy")
@@ -409,6 +428,7 @@ def get_player_name(clear):
     msg = ""
     while user_input is None:
         clear()
+        print_logo()
         print("MENU->Game properties->Player1 settings->Name")
         print(msg)
         msg = ""
@@ -432,6 +452,7 @@ def get_player_color(clear):
     }
     while user_input is None:
         clear()
+        print_logo()
         print("MENU->Game properties->Player1 settings->Color")
         print(f"1. {RED}Red{WHITE}")
         print(f"2. {BLUE}Blue{WHITE}")
