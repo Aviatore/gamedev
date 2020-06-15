@@ -4,6 +4,83 @@ import random
 def clear():
     sub.run(["clear"])
 
+
+def menu(board_size, game_mode):
+    print("MENU")
+    print()
+    if board_size is None:
+        print(f"1. Board size:  {board_size}")
+    else: 
+        print(f"1. Board size:  {board_size}x{board_size}")
+
+    print(f"2. Game mode: {game_mode}")
+    print("3. Start Game")
+    print()
+                
+
+def select_board_size():
+    print("MENU -> Board size:")
+    print()
+    for i in range (3, 10):
+        print(f"{i}. {i}x{i}")
+
+    board_size = None
+    while board_size is None:
+        print()
+        board_size = input("Choose Board size: ")
+        if len(board_size) != 1:
+            print("Only 1 digit allowed")
+            board_size = None
+            continue
+        elif not board_size.isnumeric():
+            print("Only digits allowed")
+            board_size = None
+            continue
+        else:
+            board_size = int(board_size)
+            if board_size < 3:
+                print("Provided digit has to be in range between 3 and 9")
+                board_size = None
+            else:
+                return board_size
+
+
+def select_game_mode():
+    print("MENU -> Game Mode:")
+    print()
+    print("1. HUMAN vs HUMAN")
+    print("2. HUMAN vs COMPUTER")
+    print("3. COMPUTER vs COMPUTER")
+
+    player_input = None
+    while player_input is None:
+        print()
+        player_input = input("Choose Game mode: ")
+        if len(player_input) != 1:
+            print("Only 1 digit allowed")
+            player_input = None
+            continue
+        elif not player_input.isnumeric():
+            print("Only digits allowed")
+            player_input = None
+            continue
+        else:
+            player_input = int(player_input)
+            if player_input == 0 or player_input > 3:
+                print("Provided digit has to be in range between 1 and 3")
+                player_input = None
+            else:
+                if player_input == 1:
+                    game_mode = "HUMAN vs HUMAN"
+                    return game_mode
+                elif player_input == 2:
+                    game_mode = "HUMAN vs COMPUTER"
+                    return game_mode
+                elif player_input == 3:
+                    game_mode = "COMPUTER vs COMPUTER"
+                    return game_mode
+
+
 def init_board(size):
     """Returns an empty 3-by-3 board (with .)."""
     board = []
@@ -453,16 +530,48 @@ def print_result(winner):
         print(f"{winner} has won!")
 
 
-def tictactoe_game(mode='HUMAN-HUMAN'):
-    size = None
-    while size is None:
-        size = input("Board size: ")
-        if not size.isdigit():
-            size = None
-        elif not 2 < int(size) < 10:
-            size = None
-    board = init_board(int(size))
-    if mode == 'HUMAN-HUMAN':
+def tictactoe_game(mode='HUMAN vs HUMAN'):
+    board_size = None
+    game_mode = None
+    start_game = False
+
+    while start_game == False:
+        clear()
+        menu(board_size, game_mode)
+        
+
+        player_input = None
+        while player_input is None:
+            player_input = input("Press 1 for Board size options or press 2 for Game modes: ")
+            if len(player_input) > 1:
+                print("Only 1 digit allowed")
+                player_input = None
+                continue
+            elif not player_input.isnumeric():
+                print("Only digits allowed")
+                player_input = None
+                continue
+            else:
+                player_input = int(player_input)
+                if player_input == 0 or player_input > 3:
+                    print("Provided digit has to be in range between 1 and 3")
+                    player_input = None
+                elif player_input == 1:
+                    clear()
+                    board_size = select_board_size()
+                elif player_input == 2:
+                    clear()
+                    game_mode = select_game_mode()
+                elif player_input == 3:
+                    if board_size != None and game_mode != None:
+                        start_game = True
+                    else:
+                        print("Both Board size and Game mode have to be selected")
+                        player_input = None
+                        continue
+
+    board = init_board(board_size)
+    if game_mode == 'HUMAN vs HUMAN':
         player_name1 = None
         while player_name1 is None:
             player_name1 = input("Player 1 [X], give your name: ")
@@ -520,7 +629,7 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
                 print_result(winner)
                 loop = False
                 continue
-    elif mode == 'HUMAN-AI':
+    elif game_mode == 'HUMAN vs COMPUTER':
         player_name1 = None
         while player_name1 is None:
             player_name1 = input("Player 1 [X], give your name: ")
@@ -536,25 +645,25 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
         # use get_move(), mark(), has_won(), is_full(), and print_board() to create game logic
         loop = True
         while loop:
-            #clear()
+            clear()
             print_board(board)
             row, col = get_move(board, 1)
             mark(board, player1, row, col)
             if has_won(board, player1):
                 winner = 'X'
-                #clear()
+                clear()
                 print_board(board)
                 print_result(winner)
                 loop = False
                 continue
             elif is_full(board):
                 winner = 'tie'
-                #clear()
+                clear()
                 print_board(board)
                 print_result(winner)
                 loop = False
                 continue
-            #clear()
+            clear()
             print_board(board)
             output = get_ai_move(board, computer)
             print(output)
@@ -562,22 +671,22 @@ def tictactoe_game(mode='HUMAN-HUMAN'):
             mark(board, computer, row, col)
             if has_won(board, computer):
                 winner = 'O'
-                #clear()
+                clear()
                 print_board(board)
                 print_result(winner)
                 loop = False
                 continue
             elif is_full(board):
                 winner = 'tie'
-                #clear()
+                clear()
                 print_board(board)
                 print_result(winner)
                 loop = False
                 continue
 
 def main_menu():
-#    tictactoe_game('HUMAN-HUMAN')
-    tictactoe_game('HUMAN-AI')
+#    tictactoe_game('HUMAN vs HUMAN')
+    tictactoe_game('HUMAN vs COMPUTER')
 
 
 if __name__ == '__main__':
