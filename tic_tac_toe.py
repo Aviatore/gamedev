@@ -392,28 +392,6 @@ def mark(board, player, row, col):
     board[row][col] = f"{player['color']}{player['mark']}{WHITE}"
 
 
-def has_won_mateusz(board, player):
-    if board[0][0] == player['mark'] and board[0][1] == player['mark'] and board[0][2] == player['mark']:
-        return True
-    elif board[1][0] == player['mark'] and board[1][1] == player['mark'] and board[1][2] == player['mark']:
-        return True
-    elif board[2][0] == player['mark'] and board[2][1] == player['mark'] and board[2][2] == player['mark']:
-        return True
-    elif board[0][0] == player['mark'] and board[1][0] == player['mark'] and board[2][0] == player['mark']:
-        return True
-    elif board[0][1] == player['mark'] and board[1][1] == player['mark'] and board[2][1] == player['mark']:
-        return True
-    elif board[0][2] == player['mark'] and board[1][2] == player['mark'] and board[2][2] == player['mark']:
-        return True
-    
-    elif board[0][0] == player['mark'] and board[1][1] == player['mark'] and board[2][2] == player['mark']:
-        return True
-    elif board[2][0] == player['mark'] and board[1][1] == player['mark'] and board[0][2] == player['mark']:
-        return True
-
-    else: 
-        return False
-
 def has_won(board, player, board_props):
     row_len = len(board[0])
     col_len = len(board)
@@ -552,31 +530,6 @@ def has_won(board, player, board_props):
         except KeyError:
             pass
     
-def has_won_(board, player):
-    """Returns True if player has won the game."""
-    row_len = len(board[0])
-    col_len = len(board)
-    
-    cross_template = [['00', '11', '22'], ['02', '11', '20']]
-    cross = [0, 0]
-    in_col = [0, 0, 0]
-    for row in range(row_len):
-        in_row = 0
-        for col in range(col_len):
-            if board[row][col] == player['mark']:
-                in_row += 1
-                in_col[col] += 1
-                if f"{row}{col}" in cross_template[0]:
-                    cross[0] += 1
-                if f"{row}{col}" in cross_template[1]:
-                    cross[1] += 1
-        if in_row == 3:
-            return True
-    if 3 in in_col or 3 in cross:
-        return True
-    else:
-        return False
-
 
 def is_full(board):
     """Returns True if board is full."""
